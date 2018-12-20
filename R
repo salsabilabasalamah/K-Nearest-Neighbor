@@ -1,0 +1,86 @@
+## Menggunakan data : titanic
+### Menggunakan _software_ R
+
+library(class)
+data.titanic=read.csv("...\\titanic3.csv", header=T)
+View(data.titanic)
+library(data.table)
+titanic=data.table(data.titanic)
+Titanic=na.omit(titanic, cols=c("survived", "pclass", "age"))
+Titanic$survived=factor(Titanic$survived) #1 untuk hidup
+Titanic$pclass=factor(Titanic$pclass)
+faktor=cbind(pclass=Titanic$pclass,age=Titanic$age)
+summary(Titanic$survived) 
+summary(Titanic$pclass)
+summary(Titanic$age)
+
+
+#klasifikasi dari variabel age, pclass, dan survived
+klasifikasi1=knn(faktor,faktor,Titanic$survived,k=1,prob=T)
+sum(Titanic$survived==klasifikasi1)
+table(klasifikasi1,Titanic$survived)
+#validasi untuk nilai k=29
+klasifikasi29=knn(faktor,faktor,Titanic$survived,k=29,prob=T)
+sum(Titanic$survived==klasifikasi29)
+table(klasifikasi29,Titanic$survived)
+#validasi untuk nilai k=3
+klasifikasi3=knn(faktor,faktor,Titanic$survived, k=3, prob=T)
+klasifikasi3
+sum(Titanic$survived==klasifikasi3)
+table(klasifikasi3,Titanic$survived)
+#Buatlah validasi untuk nilai k=5
+
+#validasi untuk nilai k=5
+klasifikasi5=knn(faktor,faktor,Titanic$survived, k=101, prob=T)
+klasifikasi5
+sum(Titanic$survived==klasifikasi5)
+table(klasifikasi5,Titanic$survived) #miss klasifikasinya = 1/8, tepat=7/8
+
+#Jika ada seseorang bernama Mr. Edward Cullen dengan Sex=Female, age=45, dan pclass=1, apakah Mr. Edward Cullen survive
+
+plot(faktor, col=ifelse(Titanic$survived=="1","pink","yellow"),lwd=4)
+
+legend("topright", fill=c(6,7,3), legend=c("HIDUP","MATI","Mr. Edward Cullen"),title="Survived",horiz=TRUE,
+       col=grey(.5),cex=0.5)
+data=cbind(1,45)
+points(data,cex=2,lwd=4,col="green") 
+rownames(data)<-c("Mr. Edward Cullen ")
+data
+klasifikasi<-knn(faktor,data,Titanic$survived,k=3,prob = T)
+klasifikasi
+semua<-rbind(faktor,data) #gabungan
+dist(rbind(semua[1047,],semua[1,]),method = "euclidia") 
+circle<-function(x,y,rad=1,nvert=500, ...){
+  rads<-seq(0,2*pi,length.out = nvert)
+  xcoords<-cos(rads)*rad+x
+  ycoords<-sin(rads)*rad+y
+  polygon(xcoords,ycoords,...)}
+circle(1,45,16) 
+#untuk mengetahui klasifikasi 
+survived.tambahan<-factor(c("1")) #nambah 1 penumpang
+survived1<-unlist(list(Titanic$survived,survived.tambahan))
+survived1 
+sum(survived1=="1") I#bertambah 1 yg hidup
+sum(survived1=="0")
+
+klasifikasimr1<-knn(semua,semua,survived1,k=1,prob = T) #klasifikasi umum
+klasifikasimrx1
+100*sum(survived1==klasifikasimrx1)/100
+table(klasifikasimrx1,survived1)
+
+klasifikasimr2<-knn(semua,semua,survived1,k=3,prob = T)
+klasifikasimrx2
+100*sum(survived1==klasifikasimrx2)/100
+table(klasifikasimrx2,survived1)
+
+klasifikasimr3<-knn(semua,semua,survived1,k=2,prob = T)
+klasifikasimrx3
+100*sum(survived1==klasifikasimrx3)/100
+table(klasifikasimrx3,survived1)
+
+klasifikasimr5<-knn(semua,semua,survived1,k=5,prob = T)
+klasifikasimrx5
+100*sum(survived2==klasifikasimrx5)/100
+table(klasifikasimrx5,survived1)
+
+### Penjelasan hasil _output_ _software_ R [KLIK DISINI !!!]( https://medium.com/@salsabilabasalamah)
