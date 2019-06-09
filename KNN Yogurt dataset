@@ -1,0 +1,16 @@
+### K-Nearest-Neighbor in R
+### Yogurt dataset
+
+Yogurt = Yogurt
+View(Yogurt) 
+
+yogurt_class<-c(rep("y",818),rep("d",970),rep("h",71),rep("w",553))
+yogurt<-data.frame(Yogurt[,6:9],species=yogurt_class)
+
+genap.n<-2*(1:1206)-1
+yogurt.latihan<-Yogurt[genap.n,]
+yogurt.uji<-Yogurt[-genap.n,]
+yogurt.knn<-knn(yogurt.latihan[,-10],yogurt.uji[,-10], yogurt.latihan[,10], k=5)
+(table(yogurt.knn,yogurt.uji[,10]))
+pairs(yogurt.uji[,6:9],pch=as.character(yogurt.uji[,10]),col=c(4,2)
+      [(yogurt.uji$choice!=yogurt.knn)+1])
